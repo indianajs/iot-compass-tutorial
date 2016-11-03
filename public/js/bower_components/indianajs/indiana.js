@@ -161,7 +161,7 @@ var spatialAwareness = function(options) {
 	}
 
 	function addThings(things){
-		thingsArray
+		thingsArray //TODO
 	}
 
 	// function registerThings(things) {
@@ -197,35 +197,35 @@ var spatialAwareness = function(options) {
 	}
 
 	function activateQRCodeReader(divselector, cb) {
-		$(divselector).html5_qrcode(function(data) {
-		        // do something when code is read
-				// $(divselector+"data").html(data);
-		    	console.log(data)
-		    	var r = confirm("Are you in TECO kitchen?")
-		    	if(r) {
-					ajaxRequest("http://localhost:8080/kitchen","GET", {}, function(data) {
-						console.log("Ajax success:", data);
-		    			init();
-						thingsArray = data;
-						cb(data)
-					}, function(err) {
-						console.log("Ajax error:", err);
-						// $("#qrcodediverr").html(err.statusText)
-					});
-		    		// $(divselector+"data").html("Welcome to TECO kitchen.")
-		    	} else {
-		    		init();
-					thingsArray = kitchenthings;
-		    		cb(kitchenthings);
-		    	}
-		    }, function(error){
-		        //show read errors 
-				// $(divselector+"err").html(error)
-		        // console.log(error)
-		    }, function(videoError){
-		        //the video stream could be opened
-		        console.log(videoError)
-		    })
+		// $(divselector).html5_qrcode(function(data) {
+		//         // do something when code is read
+		// 		// $(divselector+"data").html(data);
+		//     	console.log(data)
+		//     	var r = confirm("Are you in TECO kitchen?")
+		//     	if(r) {
+		// 			ajaxRequest("http://localhost:8080/kitchen","GET", {}, function(data) {
+		// 				console.log("Ajax success:", data);
+		//     			init();
+		// 				thingsArray = data;
+		// 				cb(data)
+		// 			}, function(err) {
+		// 				console.log("Ajax error:", err);
+		// 				// $("#qrcodediverr").html(err.statusText)
+		// 			});
+		//     		// $(divselector+"data").html("Welcome to TECO kitchen.")
+		//     	} else {
+		//     		init();
+		// 			thingsArray = kitchenthings;
+		//     		cb(kitchenthings);
+		//     	}
+		//     }, function(error){
+		//         //show read errors 
+		// 		// $(divselector+"err").html(error)
+		//         // console.log(error)
+		//     }, function(videoError){
+		//         //the video stream could be opened
+		//         console.log(videoError)
+		//     })
 	}
 
 	function deactivateQRCodeReader(divselector) {
