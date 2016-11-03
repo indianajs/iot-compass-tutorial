@@ -234,6 +234,54 @@ function resetCenterImage(){
   button.select("title").html("Nothing")
 }
 
+function applyLocationTextChildren(registeredThings){
+  $.each(registeredThings, function(key, value) {
+    var location = indiana.getThingCardinalPosition(key);
+    var id = '#' + key;
+    // console.log(location)
+    // if (!$(id+"Position")) $(id).append('<p id="'+id+'Position"></p>');
+    switch(location) {
+      case 'N': createLocationText(id, value, 'in front'); break;
+      case 'NW': createLocationText(id, value, 'in front and to the left'); break;
+      case 'NE': createLocationText(id, value, 'in front and to the right'); break;
+      case 'SW': createLocationText(id, value, 'behind to the left'); break;
+      case 'EW': createLocationText(id, value, 'behind to the right'); break;
+      case 'S': createLocationText(id, value, 'behind', true); break;
+      case 'E': createLocationText(id, value, 'right'); break;
+      case 'W': createLocationText(id, value, 'left'); break;
+    }
+  })
+}
+
+function createLocationText(id, thing, location, no_of){
+    var of = no_of ? '' : ' of';
+    // if(location == 'in front') {
+    //   $(id+"Position").html("<strong aria-live=true>The "+thing+" is "+location+of+" you.</strong>");
+    // } else {
+      $(id+"Position").html("<strong>The "+thing.label+" is "+location+of+" you.</strong>");
+    // }
+}
+
+/*
+Usage example
+item.append("desc").html(getLocationText(thing))
+
+Still needs i18n 
+*/
+function getLocationText(id) {
+  var location = indiana.getThingCardinalPosition(id);
+  switch(location) {
+    case 'N': return ' in front of you.';
+    case 'NW': return ' in front and to the left of you.';
+    case 'NE': return ' in front and to the right of you.';
+    case 'SW': return ' behind to the left of you.';
+    case 'EW': return ' behind to the right of you.';
+    case 'S': return ' behind you.';
+    case 'E': return ' right of you.';
+    case 'W': return ' left of you.';
+  }
+}
+
 function getCompassUtility(){
     return {
         createSVGFoundation: createSVGFoundation,
@@ -241,6 +289,7 @@ function getCompassUtility(){
         populateRadar: populateRadar,
         updatePositions: updatePositions,
         updateCenterImage: updateCenterImage,
-        resetCenterImage: resetCenterImage
+        resetCenterImage: resetCenterImage,
+        getLocationText: getLocationText
     }
 }
