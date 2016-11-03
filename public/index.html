@@ -9,7 +9,7 @@
     <script src="js/d3.v3.min.js"></script>
     <script src="js/bower_components/indianajs/indiana.js"></script>
     <!-- <script src="js/html5-qrcode.min.js"></script> -->
-    <script src="js/radar.js"></script>
+    <script src="js/compass.js"></script>
 </head>
 
 <body>
@@ -21,7 +21,9 @@
 var things = {};
 things.laptop = {
     location: {
-        dir: 120
+        dir: 120,
+        x: 100,
+        y:100
     },
     label: "laptop",
     img: "img/laptop.jpg"
@@ -29,7 +31,9 @@ things.laptop = {
 
 things.lamp = {
     location: {
-        dir: 0
+        dir: 0,
+        x: 70,
+        y: 50
     },
     label: "lamp",
     img: "img/lamp.png"

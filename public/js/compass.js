@@ -168,8 +168,6 @@ function populateRadar(foundation, things){
       .style("stroke-width", 2)
       .style("stroke", color)
 
-
-
       // .attr('aria-hidden',true)
 
       // thing.append("circle")
@@ -203,34 +201,6 @@ function updatePositions(things, direction) {
 
     
   });
-}
-
-function initListeners() {
-  document.addEventListener('indiana_deviceorientation', function(data) {
-    // $("#qrcodedivdata").html(Math.round(Orientation.detail.dir));
-    // console.log("deviceorientation", data)
-    var dir = data.detail.orientation.dir;
-    // things = data.detail.things;
-    updatePositions(things, dir);
-    console.log("Indiana event" + dir)
-  })
-  
-  document.addEventListener('nothingInFront', function() {
-    $('#radartarget').html("No registered things in front of you");
-    // $('#selectionCircle').attr("fill","none");
-    vibrating = false;
-
-    $('#mini_radar_icon').show();
-    $('#mini_radar_selection').hide();
-    var button = d3.select('#radarButton')
-    button.attr("xlink:href", "#pagecontent")
-    // button.select('image')
-    //   .attr('xlink:href', 'img/arrow.png')
-    $('#radarTargetImage').hide();
-    button.select("title").html("Nothing")
-  })
-  
-
 }
 
 function updateCenterImage(thing){

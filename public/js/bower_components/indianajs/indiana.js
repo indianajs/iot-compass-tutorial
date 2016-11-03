@@ -107,6 +107,7 @@ var spatialAwareness = function(options) {
 					document.dispatchEvent(event);
 				}
 			} else {
+				// count down each thing not found
 				count--;
 				if(foundThing == '' && count == 0) {
 					// console.log('notfound',count,foundThing);
@@ -237,7 +238,6 @@ var spatialAwareness = function(options) {
 	/* 
 	Return Spatial Aware Indiana
 	*/
-
 	return {
 		init: init,
 		registerThings : registerThings,
