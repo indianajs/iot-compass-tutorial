@@ -239,7 +239,6 @@ function getCompassUtility(){
         createSVGFoundation: createSVGFoundation,
         drawCircles: drawCircles,
         populateRadar: populateRadar,
-        initListeners: initListeners,
         updatePositions: updatePositions,
         updateCenterImage: updateCenterImage,
         resetCenterImage: resetCenterImage
