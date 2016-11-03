@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/jquery.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/bower_components/indianajs/indiana.js"></script>
+    <!-- <script src="js/html5-qrcode.min.js"></script> -->
+    <script src="js/radar.js"></script>
+</head>
+
+<body>
+    <p id="radartarget" style="text-align: center" aria-live="polite"> This is ARIA speaking </p>
+    <div id="radardiv"></div>
+    <div id="qrcodediv" style="width: 300px; height:200px"></div>
+</body>
+<script type="text/javascript">
+var things = {};
+things.laptop = {
+    location: {
+        dir: 120
+    },
+    label: "laptop",
+    img: "img/laptop.jpg"
+};
+
+things.lamp = {
+    location: {
+        dir: 0
+    },
+    label: "lamp",
+    img: "img/lamp.png"
+};
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    //requirejs?
+    compass = getCompassUtility();
+
+    //initVisuals
+    //initialization of the Standard text
+    $('#radartarget').html("Rotate your device to explore your surroundings");
+    // Build SVG Compass
+    var foundation = compass.createSVGFoundation("#radardiv");
+    compass.drawCircles(foundation);
+    compass.populateRadar(foundation, things);
+
+    // Update positions - Replace this with the QR-Checkpoint data
+    var i = 0;
+    compass.updatePositions(things, i);
+
+    initListeners();
+
+    //get location position for specific thing
+    //  if(indiana != null)
+    //   thing.append("desc").html(getLocationText(key))
+    // if(indiana != null)
+    //   thing.select("desc").html(getLocationText(key))
+
+
+    //////////////////// INDIANAJS /////////
+    //requirejs?
+    indiana = spatialAwareness({
+        "fov": 40
+    });
+    // indiana.setFieldOfView(40);
+    indiana.registerThings(things);
+    indiana.init();
+
+});
+
+function initListeners() {
+    // Update thing positions
+    document.addEventListener('indiana_deviceorientation', function(data) {
+        // $("#qrcodedivdata").html(Math.round(Orientation.detail.dir));
+        // console.log("deviceorientation", data)
+        var dir = data.detail.orientation.dir;
+        compass.updatePositions(things, dir);
+    });
+
+    // Some thing is within the field of view
+    document.addEventListener('indiana_foundThingInFront', function(thing) {
+        thingUnderReticule = thing.detail;
+        if (thingUnderReticule.key != 'none') {
+            $('#radartarget').html('You are looking at the <a href="#' + thingUnderReticule.key + '">' + thingUnderReticule.value.label + '</a>');
+        }
+        compass.updateCenterImage(thingUnderReticule);
+    });
+
+    // No thing is within the field of view
+    document.addEventListener('indiana_noThingInFront', function() {
+        $('#radartarget').html("No registered things in front of you");
+        compass.resetCenterImage();
+    });
+}
+</script>
+
+</html>

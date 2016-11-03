@@ -1,0 +1,19 @@
+{
+  "name": "iot-compass-tutorial",
+  "version": "1.0.0",
+  "description": "IoT Compass tutorial using IndianaJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/indianajs/iot-compass-tutorial.git"
+  },
+  "author": "Andrei Miclaus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/indianajs/iot-compass-tutorial/issues"
+  },
+  "homepage": "https://github.com/indianajs/iot-compass-tutorial"
+}
