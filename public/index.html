@@ -9,6 +9,7 @@
     <script src="js/d3.v3.min.js"></script>
     <script src="js/bower_components/indianajs/indiana.js"></script>
     <!-- <script src="js/html5-qrcode.min.js"></script> -->
+
     <script src="js/compass.js"></script>
     <script src="js/map.js"></script>
 </head>
@@ -16,15 +17,22 @@
 <body>
     <p id="radartarget" style="text-align: center" aria-live="polite"> This is ARIA speaking </p>
     <div id="radardiv"></div>
+
+    <p id="maptarget" style="text-align: center" aria-live="polite"> This is ARIA speaking again </p>
+    <div id="mapdiv"></div>
+
+    <button id="changeDisplayTypeBtn"  onclick="changeDisplayType()"> Change Display</button>
     <div id="qrcodediv" style="width: 300px; height:200px"></div>
 </body>
+
+
 <script type="text/javascript">
 var things = {};
+
 things.laptop = {
     location: {
-        dir: 120,
         x: 100,
-        y:100
+        y: 100
     },
     label: "laptop",
     img: "img/laptop.jpg"
@@ -32,30 +40,48 @@ things.laptop = {
 
 things.lamp = {
     location: {
-        dir: 0,
-        x: 70,
-        y: 50
+        x: 200,
+        y: -400
     },
     label: "lamp",
     img: "img/lamp.png"
 };
+
 </script>
+
 <script type="text/javascript">
 $(document).ready(function() {
     //requirejs?
-    compass = getCompassUtility();
 
+    things.laptop.location.dir=cartesian2Degree(things.laptop.location.x,things.laptop.location.y);
+    things.lamp.location.dir=cartesian2Degree(things.lamp.location.x,things.lamp.location.y);
+
+
+
+    compass = getCompassUtility();
+    map= getMapUtility();
+
+    console.log("laptopDirection: "+things.laptop.location.dir);
+    console.log("lampDirection: "+things.lamp.location.dir);
     //initVisuals
     //initialization of the Standard text
     $('#radartarget').html("Rotate your device to explore your surroundings");
     // Build SVG Compass
-    var foundation = compass.createSVGFoundation("#radardiv");
-    compass.drawCircles(foundation);
-    compass.populateRadar(foundation, things);
+    var compassFoundation = compass.createSVGFoundation("#radardiv");
+    compass.drawCircles(compassFoundation );
+    compass.populateRadar(compassFoundation , things);
+
+    $('#maptarget').html("Rotate your device or walk with it to explore your surroundings");
+    // Build SVG Compass
+    var mapFoundation = map.createSVGFoundation("#mapdiv");
+    map.draw(mapFoundation);
+    map.populate(mapFoundation, things);
+
 
     // Update positions - Replace this with the QR-Checkpoint data
     var i = 0;
     compass.updatePositions(things, i);
+    map.updatePosition(things, i);
 
     initListeners();
 
@@ -75,7 +101,43 @@ $(document).ready(function() {
     indiana.registerThings(things);
     indiana.init();
 
+
+    displayType="map";
+    changeDisplayType();
 });
+
+function changeDisplayType(){
+    if(displayType==="compass"){
+//        console.log("change displayType to map");
+        displayType="map";
+        $("#maptarget").show();
+        $("#mapdiv").show();
+        $("#radartarget").hide();
+        $("#radardiv").hide();
+    }else{
+//        console.log("change displayType to compass");
+        displayType="compass";
+        $("#maptarget").hide();
+        $("#mapdiv").hide();
+        $("#radartarget").show();
+        $("#radardiv").show();
+    }
+}
+
+function cartesian2Polar(x,y){
+    var distance = Math.sqrt(x*x + y*y);
+    var theta= Math.atan2(-y, x);
+    return {distance:distance,theta:theta};
+}
+function cartesian2Degree(x,y){
+    var d=cartesian2Polar(x,y).theta*180/Math.PI;
+    d+=Math.PI;
+    d = (d>=360) ? 360 - d : d;
+    d = (d<0) ? 360 + d : d;
+    return d;
+
+}
+
 
 function initListeners() {
     // Update thing positions
@@ -84,6 +146,7 @@ function initListeners() {
         // console.log("deviceorientation", data)
         var dir = data.detail.orientation.dir;
         compass.updatePositions(things, dir);
+        map.updatePosition(things, dir);
     });
 
     // Some thing is within the field of view
@@ -91,14 +154,18 @@ function initListeners() {
         thingUnderReticule = thing.detail;
         if (thingUnderReticule.key != 'none') {
             $('#radartarget').html('You are looking at the <a href="#' + thingUnderReticule.key + '">' + thingUnderReticule.value.label + '</a>');
+            $('#maptarget').html('You are looking at the <a href="#' + thingUnderReticule.key + '">' + thingUnderReticule.value.label + '</a>');
         }
         compass.updateCenterImage(thingUnderReticule);
+//        map.updateCenterImage(thingUnderReticule);
     });
 
     // No thing is within the field of view
     document.addEventListener('indiana_noThingInFront', function() {
         $('#radartarget').html("No registered things in front of you");
+        $('#maptarget').html("No registered things in front of you");
         compass.resetCenterImage();
+//        map.resetCenterImage();
     });
 }
 </script>
